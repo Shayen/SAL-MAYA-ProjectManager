@@ -187,7 +187,7 @@ class loadProjectwin(object) :
         _myMayaDict = salCore.core().Load_mayaDir()
         _mymayaID = {}
         
-        i=1
+        i=0
         for key,value in _myMayaDict.items():
             #print ('key = '+str(key))
             #print ('Value = '+value)
@@ -241,25 +241,26 @@ class loadProjectwin(object) :
         _prjName = cmds.textScrollList('ProjectName_TextScrollList', query=True, selectItem=True)
         _prjSelectedIndex = cmds.textScrollList('ProjectName_TextScrollList', query=True, selectIndexedItem=True)
         
-        _myMayaSceneID = str(self._myMayaProjectID[int( _prjSelectedIndex[0] )])
+        _myMayaSceneID = str(self._myMayaProjectID[int( _prjSelectedIndex[0] )-1])
         
         #Set selected project to recent project
         salCore.XML_mod().xml_update_project( pjID = _myMayaSceneID )
         
         _myMayaDict = salCore.core().Load_recentProject()
         
-        #print ('DEBUG|LoadprojectButton_onClick : >> '+str(_myMayaDict[2]))
+        print ('DEBUG|LoadprojectButton_onClick| _myMayaDict : >> '+str(_myMayaDict))
         #print ('DEBUG|LoadprojectButton_onClick : Project ' + _prjName[0] + ' ID is ' + _myMayaSceneID + ' was load!!')
-        scenelist = mainUI().sceneList_update()
+        
         
         confAnswer = cmds.confirmDialog( title='Confirm', message='Set selected project to working project?', button=['Yes','No'], defaultButton='Yes', cancelButton='No', dismissString='No' )
 
         if str(confAnswer) == 'Yes' :
             newpjPath = _myMayaDict[2]
             setPrjCmd = 'setProject "'+newpjPath+'"'
-            #print ('DEBUG|openButton_onclick|setPrjCmd : '+setPrjCmd)
+            print ('DEBUG|LoadprojectButton_onClick |setPrjCmd : '+setPrjCmd)
             pm.mel.eval(setPrjCmd)
-            print ('DEBUG|current Projectt path : '+cmds.workspace(query=True,rd=True))
+            print ('DEBUG|LoadprojectButton_onClick | current work space  : '+cmds.workspace(query=True,rd=True))
+            scenelist = mainUI().sceneList_update()s
         else :
             pass
 
@@ -273,7 +274,7 @@ class loadProjectwin(object) :
         _prjName = cmds.textScrollList('ProjectName_TextScrollList', query=True, selectItem=True)
         _prjSelectedIndex = cmds.textScrollList('ProjectName_TextScrollList', query=True, selectIndexedItem=True)
         
-        selectedID = str(self._myMayaProjectID[int( _prjSelectedIndex[0] )])
+        selectedID = str(self._myMayaProjectID[int( _prjSelectedIndex[0]-1 )])
         #print selectedID
         salCore.XML_mod().xml_delete_project(targetID=selectedID)
 
