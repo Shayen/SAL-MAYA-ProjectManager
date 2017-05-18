@@ -92,10 +92,12 @@ class mainUI (object):
         # Confirm button
         cmds.columnLayout(adj=True)
         cmds.button(l="OPEN",
-                     c=self.openButton_onclick
+                     c=self.openButton_onclick,
+                     backgroundColor=(0.0,1.0,0.5)
                      );
         cmds.button(l="CLOSE",
-                     c=self.closeButton_onClick
+                     c=self.closeButton_onClick,
+                     backgroundColor = (1.0,0.1,0.1)
                      );
         cmds.setParent('..')
         
@@ -204,10 +206,12 @@ class loadProjectwin(object) :
         cmds.rowLayout(numberOfColumns=5, adjustableColumn=1)
         cmds.button(
                     l="add new project",
-                    c = self.add_newProject_on_click 
+                    c = self.add_newProject_on_click ,
+                    backgroundColor = (0.3,0.3,1.0)
                     )
         cmds.button(l="remove project",
-                    c=self.removeButton_onClick
+                    c=self.removeButton_onClick,
+                    backgroundColor = (1,0,0)
                     )
         cmds.setParent('..')
         cmds.separator()
@@ -217,7 +221,8 @@ class loadProjectwin(object) :
         cmds.rowLayout(numberOfColumns=2, adjustableColumn=1)
         cmds.button(
                     l="Load project",
-                     c=self.LoadprojectButton_onClick
+                     c=self.LoadprojectButton_onClick,
+                     backgroundColor=(0,1,0)
                      );
         cmds.button(
                     l="CLOSE", 
@@ -233,8 +238,21 @@ class loadProjectwin(object) :
         print ("DEBUG|add_newProject_on_click : CLICK!!")
         Prj_Path = cmds.fileDialog2(fileMode=3,dialogStyle=2)
         
-        #add project to XML database
-        salCore.XML_mod().add_XML_project(name=raw_input(), path=Prj_Path,recentPrj=1)
+        #Get Project nickname
+        result = cmds.promptDialog(
+        title='Rename Object',
+        message='Enter Project Name:',
+        button=['OK', 'Cancel'],
+        text = os.path.basename(Prj_Path[0]),
+        defaultButton='OK',
+        cancelButton='Cancel',
+        dismissString='Cancel')
+
+        if result == 'OK':
+            text = cmds.promptDialog(query=True, text=True)
+
+            #add project to XML database
+            salCore.XML_mod().add_XML_project(name=text, path=Prj_Path,recentPrj=1)
         
     def LoadprojectButton_onClick(self, *args):
         
@@ -260,7 +278,7 @@ class loadProjectwin(object) :
             print ('DEBUG|LoadprojectButton_onClick |setPrjCmd : '+setPrjCmd)
             pm.mel.eval(setPrjCmd)
             print ('DEBUG|LoadprojectButton_onClick | current work space  : '+cmds.workspace(query=True,rd=True))
-            scenelist = mainUI().sceneList_update()s
+            scenelist = mainUI().sceneList_update()
         else :
             pass
 
@@ -295,4 +313,5 @@ def main(*args) :
     appmainUI = mainUI()
     appmainUI.showUi()
 #print (__file__)
-
+if __name__ == '__main__':
+    main()
