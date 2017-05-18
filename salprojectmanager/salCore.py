@@ -3,7 +3,6 @@ import maya.cmds as cmds
 import os
 from sets import Set
 
-from salprojectmanager.SALWin import loadProjectwin
 
 class core(object):
     ''' pass '''
@@ -200,8 +199,13 @@ class XML_mod (object):
         
         #print ('DEBUG|XML updated : '+xml_path)
         
-        loadwin = loadProjectwin()
-        loadwin.update_List()
+        if cmds.window('myProjectLoaderWin',exists=True):
+            myDir = core().Load_mayaDir()
+            Prjname =[]
+            for i ,j in myDir.items() : 
+                Prjname.append(j)
+            cmds.textScrollList('ProjectName_TextScrollList',edit=True, removeAll=True )
+            cmds.textScrollList('ProjectName_TextScrollList',edit=True, append = Prjname )
     
     def xml_delete_project(self,targetID):
         xml_path = os.path.join(ENV_PATH.WORKINGSAPCE_PATH,ENV_PATH.XML_FILE_NAME)
@@ -217,8 +221,13 @@ class XML_mod (object):
                     root.remove(project)
         tree.write(xml_path)
 
-        loadwin = loadProjectwin()
-        loadwin.update_List()
+        if cmds.window('myProjectLoaderWin',exists=True):
+            myDir = core().Load_mayaDir()
+            Prjname =[]
+            for i ,j in myDir.items() : 
+                Prjname.append(j)
+            cmds.textScrollList('ProjectName_TextScrollList',edit=True, removeAll=True )
+            cmds.textScrollList('ProjectName_TextScrollList',edit=True, append = Prjname )
 
     def xml_update_project(self,pjID):
         ''' description '''
